@@ -1,0 +1,44 @@
+#TouhouDanmakufu[Plural]
+#ScriptVersion[3]
+#Title["Potato Boss Battle"]
+#Text["Potato."]
+
+let dir = GetCurrentScriptDirectory;
+let obj = ObjEnemyBossScene_Create;
+
+@Event {
+	
+}
+
+@Initialize {
+	SetSkipModeKey(KEY_INVALID);
+	SetPlayerLife(3);
+	SetPlayerSpell(2);
+	mainTask;
+}
+
+@MainLoop {
+	yield;
+}
+
+task mainTask {
+   TPlural;
+}
+
+task TPlural {
+	ObjEnemyBossScene_Add(obj, 0, dir ~ "ns1.txt");
+	while(!Obj_IsDeleted(obj)){
+        yield;
+    }
+    CloseScript(GetOwnScriptID());
+}
+
+task shotandspell {
+    SetForbidPlayerSpell(false);
+    SetForbidPlayerShot(false);
+}
+
+task noshotandspell {
+    SetForbidPlayerSpell(true);
+    SetForbidPlayerShot(true);
+}
