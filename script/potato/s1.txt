@@ -59,9 +59,9 @@
         let getY = ObjMove_GetY(objBoss);
 	var angleT;
         angleT = rand_int(0, 360);
-	loop(10){
-	let obj = CreateLooseLaserA1(getX, getY, 2, angleT, 512, 20, 222, 60);
-        angleT += 360/10;
+	loop(20){
+	let obj = CreateLooseLaserA1(getX, getY, 3, angleT, 512, 20, 222, 60);
+        angleT += 360/20;
         }
     }    
 

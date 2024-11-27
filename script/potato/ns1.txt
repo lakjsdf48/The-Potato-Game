@@ -11,7 +11,7 @@
     @Event{
         alternative(GetEventType())
         case(EV_REQUEST_LIFE){
-            SetScriptResult(5000);
+            SetScriptResult(2500);
         }
         case(EV_REQUEST_TIMER){
             SetScriptResult(60);
@@ -55,7 +55,7 @@
         let getY = ObjMove_GetY(objBoss);
 	shotangle1 = rand_int(0,360);
 	loop(50){
-	CreateShotA1(getX, getY, 3, shotangle1, 145, 5);
+	CreateShotA1(getX, getY, 3, shotangle1, 146, 5);
 	shotangle1+=360/50;}
     }
 
@@ -63,12 +63,12 @@
     if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
     let getX = ObjMove_GetX(objBoss);
     let getY = ObjMove_GetY(objBoss);
-    loop(5){
     let angleT = GetAngleToPlayer(objBoss);
+    loop(5){
     let angleIncrement = 45;
-    CreateShotA1(getX, getY, 2.5, angleT, 165, 10);
-    CreateShotA1(getX, getY, 2.5, angleT + angleIncrement, 165, 10);
-    CreateShotA1(getX, getY, 2.5, angleT - angleIncrement, 165, 10);
+    CreateShotA1(getX, getY, 2.5, angleT, 166, 10);
+    CreateShotA1(getX, getY, 2.5, angleT + angleIncrement, 166, 10);
+    CreateShotA1(getX, getY, 2.5, angleT - angleIncrement, 166, 10);
     wait(10)
     }
 }
