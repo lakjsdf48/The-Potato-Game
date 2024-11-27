@@ -1,0 +1,89 @@
+#TouhouDanmakufu[Single]
+    #ScriptVersion[3]
+    #Title["Potato Spell 1"]
+    #Text["Potato Spell"]
+    #include "script/default_system/Default_ShotConst.txt"
+    let objBoss;
+    let dic = GetCurrentScriptDirectory;
+    let potato = dic ~ "potato.png";
+
+    @Event{
+        alternative(GetEventType())
+        case(EV_REQUEST_LIFE){
+            SetScriptResult(500);
+        }
+        case(EV_REQUEST_TIMER){
+            SetScriptResult(30);
+        }
+        case(EV_REQUEST_SPELL_SCORE){
+            SetScriptResult(1000000);
+        }
+    }
+    @Initialize{
+        objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
+        ObjEnemy_Regist(objBoss);
+        let imgExPotato = potato;
+        ObjPrim_SetTexture(objBoss, imgExPotato);
+        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 43, 57);
+        ObjSprite2D_SetDestCenter(objBoss);
+        ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
+        TFinalize;
+        MainTask;
+    }
+    @MainLoop{
+        ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 50); 
+        ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 35);
+        yield;
+    }
+    task MainTask {
+        while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
+           ObjMove_SetDestAtFrame(objBoss, 0, 0, 30);
+           wait(30);
+           shot1;
+           ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth(), GetStgFrameHeight(), 30);
+           wait(30);
+           shot1;
+           ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth(), 0, 30);
+           wait(30);
+           shot1;
+           ObjMove_SetDestAtFrame(objBoss, 0, GetStgFrameHeight(), 30);
+           wait(30);
+           shot1;
+           wait(30)
+        }
+    }
+
+    task shot1 {
+	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+        let getX = ObjMove_GetX(objBoss);
+        let getY = ObjMove_GetY(objBoss);
+	var angleT;
+        angleT = rand_int(0, 360);
+	loop(10){
+	let obj = CreateLooseLaserA1(getX, getY, 2, angleT, 512, 20, 222, 60);
+        angleT += 360/10;
+        }
+    }    
+
+    task TFinalize {
+        while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
+        Obj_Delete(objBoss);
+        DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
+        SetAutoDeleteObject(true);
+        CloseScript(GetOwnScriptID());
+        return;
+    }
+
+    function GetCenterX(){
+        return GetStgFrameWidth() / 2;
+    }
+    function GetCenterY(){
+        return GetStgFrameHeight() / 2;
+    }
+    function wait(n){
+         loop(n){yield;}
+    }
+
+    function rand_int(min, max){
+    return round(rand(min, max));
+    }
