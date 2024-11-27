@@ -2,8 +2,12 @@
     #ScriptVersion[3]
     #Title["Potato!"]
     #Text["Potato!"]
-    #Include "script/default_system/Expanded_ShotConst.txt"
+    #include "script/default_system/Default_ShotConst.txt"
     let objBoss;
+    let dic = GetCurrentScriptDirectory;
+    let potato = dic ~ "potato.png";
+    let shotangle1;
+
     @Event{
         alternative(GetEventType())
         case(EV_REQUEST_LIFE){
@@ -19,26 +23,57 @@
     @Initialize{
         objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
         ObjEnemy_Regist(objBoss);
-        let imgExPotato = GetCurrentScriptDirectory() ~ "Potato.png";
+        let imgExPotato = potato;
         ObjPrim_SetTexture(objBoss, imgExPotato);
-        ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
+        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 43, 57);
         ObjSprite2D_SetDestCenter(objBoss);
-        ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY, 60);
+        ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
         TFinalize;
         MainTask;
     }
     @MainLoop{
-        ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 32); 
-        ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
+        ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 50); 
+        ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 35);
         yield;
     }
-    task MainTask{
+    task MainTask {
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
-            let angleT = GetAngleToPlayer(objBoss);
-            CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 2, angleT, 137, 5);
-            wait(30);
+           ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 30);
+           wait(30);
+           shot1;
+           wait(5);
+           ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 5);
+           wait(60);
+           shot2; 
+           wait(30)
         }
     }
+
+    task shot1 {
+	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+        let getX = ObjMove_GetX(objBoss);
+        let getY = ObjMove_GetY(objBoss);
+	shotangle1 = rand_int(0,360);
+	loop(50){
+	CreateShotA1(getX, getY, 3, shotangle1, 145, 5);
+	shotangle1+=360/50;}
+    }
+
+    task shot2 {
+    if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+    let getX = ObjMove_GetX(objBoss);
+    let getY = ObjMove_GetY(objBoss);
+    loop(5){
+    let angleT = GetAngleToPlayer(objBoss);
+    let angleIncrement = 45;
+    CreateShotA1(getX, getY, 2.5, angleT, 165, 10);
+    CreateShotA1(getX, getY, 2.5, angleT + angleIncrement, 165, 10);
+    CreateShotA1(getX, getY, 2.5, angleT - angleIncrement, 165, 10);
+    wait(10)
+    }
+}
+    
+
     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
         Obj_Delete(objBoss);
@@ -47,6 +82,7 @@
         CloseScript(GetOwnScriptID());
         return;
     }
+
     function GetCenterX(){
         return GetStgFrameWidth() / 2;
     }
@@ -57,6 +93,6 @@
          loop(n){yield;}
     }
 
-function rand_int(min, max){
-  return round(rand(min, max))
-}
+    function rand_int(min, max){
+    return round(rand(min, max));
+    }
