@@ -43,7 +43,6 @@
            ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 15);
            wait(15);
            shot1; 
-           wait(10);
            shot2;
            }
         }
@@ -64,10 +63,9 @@
     let getX = ObjMove_GetX(objBoss);
     let getY = ObjMove_GetY(objBoss);
     shotangle2 = rand_int(0, 360);
-    loop(10){
+    loop(5){
     CreateShotA1(getX, getY, 1.5, shotangle2, 166, 6);
-    wait(3);
-    shotangle2 += 360/10;}
+    shotangle2 += 360/5;}
 }
     
 

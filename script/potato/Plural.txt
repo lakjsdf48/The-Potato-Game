@@ -29,8 +29,11 @@ task TPlural {
 	ObjEnemyBossScene_Add(obj, 0, dir ~ "ns1.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "s1.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "ns2.txt");
+        ObjEnemyBossScene_Add(obj, 0, dir ~ "s2.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "ns3.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "ns4.txt");
+        ObjEnemyBossScene_LoadInThread(obj);
+        ObjEnemyBossScene_Regist(obj);
 	while(!Obj_IsDeleted(obj)){
         yield;
     }

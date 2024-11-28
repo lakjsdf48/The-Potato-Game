@@ -5,7 +5,6 @@
     #include "script/default_system/Default_ShotConst.txt"
     let objBoss;
     let dic = GetCurrentScriptDirectory;
-    let potato = dic ~ "potato.png";
     let shotangle1;
 
     @Event{
@@ -23,9 +22,9 @@
     @Initialize{
         objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
         ObjEnemy_Regist(objBoss);
-        let imgExPotato = potato;
-        ObjPrim_SetTexture(objBoss, imgExPotato);
-        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 43, 57);
+        let potato = dic ~ "potato.png";
+        ObjPrim_SetTexture(objBoss, potato);
+        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 64, 64);
         ObjSprite2D_SetDestCenter(objBoss);
         ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
         TFinalize;
@@ -55,7 +54,7 @@
         let getY = ObjMove_GetY(objBoss);
 	shotangle1 = rand_int(0,360);
 	loop(50){
-	CreateShotA1(getX, getY, 3, shotangle1, 146, 5);
+	CreateShotA1(getX, getY, 1, shotangle1, 146, 5);
 	shotangle1+=360/50;}
     }
 
@@ -66,9 +65,9 @@
     let angleT = GetAngleToPlayer(objBoss);
     loop(5){
     let angleIncrement = 45;
-    CreateShotA1(getX, getY, 2.5, angleT, 166, 10);
-    CreateShotA1(getX, getY, 2.5, angleT + angleIncrement, 166, 10);
-    CreateShotA1(getX, getY, 2.5, angleT - angleIncrement, 166, 10);
+    CreateShotA1(getX, getY, 3, angleT, 166, 10);
+    CreateShotA1(getX, getY, 3, angleT + angleIncrement, 166, 10);
+    CreateShotA1(getX, getY, 3, angleT - angleIncrement, 166, 10);
     wait(10)
     }
 }

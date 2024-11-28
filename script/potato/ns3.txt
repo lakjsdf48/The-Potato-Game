@@ -7,13 +7,12 @@
     let dic = GetCurrentScriptDirectory;
     let potato = dic ~ "potato.png";
     let shotangle1;
-    let shotangle2;
-    let shotangle3;
+    let angleT;
 
     @Event{
         alternative(GetEventType())
         case(EV_REQUEST_LIFE){
-            SetScriptResult(2500);
+            SetScriptResult(3000);
         }
         case(EV_REQUEST_TIMER){
             SetScriptResult(45);
@@ -36,18 +35,21 @@
     @MainLoop{
         ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 50); 
         ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 35);
+        ObjMove_SetDestAtFrame(objBoss, GetPlayerX, 60, 15);
         yield;
     }
+
     task MainTask {
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
-           loop(3){
-           ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 15);
            wait(15);
+           loop(10){
            shot1; 
-           shot2;
-           shot3;
-           wait(60);
            }
+           loop(4){
+           shot2;
+           wait(10);
+           }
+           wait(60);
         }
     }
 
@@ -56,34 +58,37 @@
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
 	shotangle1 = rand_int(0,360);
-	loop(60){
-	CreateShotA1(getX, getY, rand_int(1, 5), shotangle1, 2, 5);
-        wait(2);
-	shotangle1+=360/60;}
+	let obj = CreateShotA1(getX, getY, 5, shotangle1, 146, 0);
+        wait(10);
+        switchDirection(obj);
     }
 
     task shot2 {
-    if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
-    let getX = ObjMove_GetX(objBoss);
-    let getY = ObjMove_GetY(objBoss);
-    shotangle2 = rand_int(0, 360);
-    loop(30){
-    CreateShotA1(getX, getY, rand_int(1,5), shotangle2, 26, 6);
-    wait(2);
-    shotangle2 += 360/30;}
+	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+        let getX = ObjMove_GetX(objBoss);
+        let getY = ObjMove_GetY(objBoss);
+	shotangle1 = rand_int(0,360);
+	let obj = CreateShotA1(getX, getY, 3, shotangle1, 145, 0);
+        wait(10);
+        switchDirection(obj);
+        wait(90);
+        explode(obj);
     }
 
-    task shot3 {
-    if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
-    let getX = ObjMove_GetX(objBoss);
-    let getY = ObjMove_GetY(objBoss);
-    shotangle3 = rand_int(0, 360);
-    loop(14){
-    CreateShotA1(getX, getY, rand_int(1,5), shotangle3, 166, 6);
-    wait(2);
-    shotangle3 += 360/14;}
+    task explode(obj) {
+    let getX = ObjMove_GetX(obj);
+    let getY = ObjMove_GetY(obj);
+    let angleT = rand_int(0, 360);
+    loop(12){
+    CreateShotA1(getX, getY, 1, angleT, 2, 0);
+    angleT += 360/12;}  
+     Obj_Delete(obj);
+    }    
+
+    task switchDirection(obj) { 
+        wait(30);
+        ObjMove_SetAngle(obj, GetAngleToPlayer(obj));
     }
-    
 
     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
