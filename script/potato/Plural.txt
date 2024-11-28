@@ -12,7 +12,7 @@ let obj = ObjEnemyBossScene_Create;
 
 @Initialize {
 	SetSkipModeKey(KEY_INVALID);
-	SetPlayerLife(3);
+	SetPlayerLife(5);
 	SetPlayerSpell(2);
 	mainTask;
 }
@@ -31,7 +31,9 @@ task TPlural {
         ObjEnemyBossScene_Add(obj, 0, dir ~ "ns2.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "s2.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "ns3.txt");
+        ObjEnemyBossScene_Add(obj, 0, dir ~ "s3.txt");
         ObjEnemyBossScene_Add(obj, 0, dir ~ "ns4.txt");
+        ObjEnemyBossScene_Add(obj, 0, dir ~ "s4.txt");
         ObjEnemyBossScene_LoadInThread(obj);
         ObjEnemyBossScene_Regist(obj);
 	while(!Obj_IsDeleted(obj)){

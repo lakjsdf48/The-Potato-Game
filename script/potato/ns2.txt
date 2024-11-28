@@ -53,9 +53,9 @@
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
 	shotangle1 = rand_int(0,360);
-	loop(25){
+	loop(15){
 	CreateShotA1(getX, getY, 3, shotangle1, 146, 5);
-	shotangle1+=360/25;}
+	shotangle1+=360/15;}
     }
 
     task shot2 {

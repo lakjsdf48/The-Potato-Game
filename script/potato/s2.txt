@@ -6,7 +6,6 @@
     let objBoss;
     let dic = GetCurrentScriptDirectory;
     let shotangle1 = 0;
-    let shotangle2 = 0;
 
     @Event{
         alternative(GetEventType())
