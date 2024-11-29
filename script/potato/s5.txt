@@ -39,7 +39,7 @@
     }
     task MainTask {
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
-           loop(3){
+           loop(2){
            ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 10);
            accCircle(1);
            wait(30);
@@ -47,15 +47,9 @@
            if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 55){loop(3){shot1;}}
            if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 50){ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 60); shot2;}
            if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 40){loop(10){shot3;}}
-<<<<<<< HEAD
            wait(60);
            if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 20){hugelaser;}
            wait(60);
-=======
-           wait(90);
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 20){ObjMove_SetDestAtFrame(objBoss, GetPlayerX, GetPlayerY, 60); wait(75); circle(1);}
-           wait(75);
->>>>>>> c683092964bcfd1c9e842ff84a2f265e52d189ab
         }
     }    
         task hugelaser {
@@ -65,15 +59,10 @@
 
     task accCircle(dist){
             let angleT = rand_int(0,360);
-            loop(50){
-<<<<<<< HEAD
-            let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, -0.04, 1, 2, 0);
+            loop(25){
+            let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, -0.05, 1, 2, 0);
             angleT += 360/25;
             wait(1);
-=======
-            let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, -0.05, 1, 2, 0);
-            angleT += 360/50;
->>>>>>> c683092964bcfd1c9e842ff84a2f265e52d189ab
         }
     }        
 
