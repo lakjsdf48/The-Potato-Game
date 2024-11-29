@@ -39,18 +39,17 @@
     }
     task MainTask {
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
-           wait(90); 
            loop(3){
            ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 10);
            wait(10);
            accCircle(90);
            wait(10);
            }
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 50){loop(3){shot1;}}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 40){ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 60); shot2;}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 30){loop(10){shot3;}}
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 55){loop(3){shot1;}}
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 50){ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 60); shot2;}
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 40){loop(10){shot3;}}
            wait(90);
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 15){ObjMove_SetDestAtFrame(objBoss, GetPlayerX, GetPlayerY, 60); wait(75); circle(1);}
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 20){ObjMove_SetDestAtFrame(objBoss, GetPlayerX, GetPlayerY, 60); wait(75); circle(1);}
            wait(75);
         }
     }    
@@ -64,9 +63,9 @@
 
     task accCircle(dist){
             let angleT = rand_int(0,360);
-            loop(10){
+            loop(50){
             let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, -0.05, 1, 2, 0);
-            angleT += 360/10;
+            angleT += 360/50;
         }
     }        
 
@@ -75,7 +74,7 @@
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
       	shotangle1 = rand_int(0,180);
-	let obj = CreateShotA2(getX, getY, rand_int(1, 5), shotangle1, -0.05, 0, 166, 0);
+	let obj = CreateShotA2(getX, getY, 5, shotangle1, -0.05, 0, 166, 0);
         wait(90);
         explode(obj);
     }
@@ -106,9 +105,9 @@
     let getX = ObjMove_GetX(obj);
     let getY = ObjMove_GetY(obj);
     let angleU = rand_int(0, 360);
-    loop(18){
+    loop(12){
     CreateShotA1(getX, getY, 1, angleU, 26, 0);
-    angleU += 360/18}  
+    angleU += 360/12}  
      Obj_Delete(obj);
     }    
 

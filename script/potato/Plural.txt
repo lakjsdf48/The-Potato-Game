@@ -1,6 +1,6 @@
 #TouhouDanmakufu[Plural]
 #ScriptVersion[3]
-#Title["Potato Boss Battle"]
+#Title["神のジャガイモ ~ The Potato of God"]
 #Text["Potato."]
 
 let dir = GetCurrentScriptDirectory;
@@ -12,8 +12,8 @@ let obj = ObjEnemyBossScene_Create;
 
 @Initialize {
 	SetSkipModeKey(KEY_INVALID);
-	SetPlayerLife(5);
-	SetPlayerSpell(2);
+	SetPlayerLife(3);
+	SetPlayerSpell(1);
 	mainTask;
 }
 
