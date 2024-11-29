@@ -63,7 +63,7 @@
 	var angleT;
         angleT = rand_int(0, 180);
 	loop(10){
-	let obj = CreateLooseLaserA1(getX, getY, 3, angleT, 256, 20, 223, 60);
+	let obj = CreateLooseLaserA1(getX, getY, 3, angleT, 256, 20, 2, 60);
         angleT += 180/10;
         }
     }    
@@ -74,7 +74,7 @@
 	var angleU = 0;
         loop(30){
         angleU += rand_int(0, 360);
-        let obj = CreateLooseLaserA1(getX, getY, 3, angleU, 256, 20, 223, 60);
+        let obj = CreateLooseLaserA1(getX, getY, 3, angleU, 256, 20, 2, 60);
         wait(10);
         }
     }
