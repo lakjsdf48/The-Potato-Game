@@ -5,7 +5,6 @@
     #include "script/default_system/Default_ShotConst.txt"
     let objBoss;
     let dic = GetCurrentScriptDirectory;
-    let potato = dic ~ "potato.png";
     let shotangle1;
     let angleT;
 
@@ -24,9 +23,10 @@
     @Initialize{
         objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
         ObjEnemy_Regist(objBoss);
-        let imgExPotato = potato;
-        ObjPrim_SetTexture(objBoss, imgExPotato);
-        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 43, 57);
+        let potato = dic ~ "potato.png";
+        ObjPrim_SetTexture(objBoss, potato);
+        ObjRender_SetScaleXYZ(objBoss, 1, 1, 1);
+        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 48, 64);
         ObjSprite2D_SetDestCenter(objBoss);
         ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
         TFinalize;

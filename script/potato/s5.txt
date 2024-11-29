@@ -1,11 +1,12 @@
     #TouhouDanmakufu[Single]
     #ScriptVersion[3]
-    #Title["Potato Spell 4"]
-    #Text["Potato Spell"]
+    #Title["Potato Spell 5"]
+    #Text["Potato Last Spell"]
     #include "script/default_system/Default_ShotConst.txt"
     let objBoss;
     let dic = GetCurrentScriptDirectory;
     let shotangle1;
+    let shotangle2;
     let currentBossScene = GetEnemyBossSceneObjectID();
 
 
@@ -29,7 +30,7 @@
         ObjRender_SetScaleXYZ(objBoss, 1, 1, 1);
         ObjSprite2D_SetSourceRect(objBoss, 0, 0, 48, 64);
         ObjSprite2D_SetDestCenter(objBoss);
-        ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
+        ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 90);
         TFinalize;
         MainTask;
     }
@@ -38,60 +39,67 @@
     }
     task MainTask {
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
-           ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 30);
-           wait(90);
-           circle(90);
+           wait(90); 
+           loop(3){
+           ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 10);
            wait(10);
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 55){shot1;}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 50){shot1;}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 45){shot1;}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 40){shot1;}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 30){shot2;}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 15){accCircle(45);}
-           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 10){accCircle(90);}
-
+           accCircle(90);
+           wait(10);
+           }
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 50){loop(3){shot1;}}
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 40){ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 60); shot2;}
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 30){loop(10){shot3;}}
+           wait(90);
+           if(ObjEnemyBossScene_GetInfo(currentBossScene, INFO_TIMER) < 15){ObjMove_SetDestAtFrame(objBoss, GetPlayerX, GetPlayerY, 60); wait(75); circle(1);}
+           wait(75);
         }
     }    
         task circle(dist){
-            loop(10){
             let angleT = 0;
-            loop(20){
-            CreateShotA1(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, 2, 0);
-            angleT += 360/20;
-        }
-       wait(10);
-    }        
-}
+            loop(10){
+            angleT += 360/10;
+            let obj = CreateLooseLaserA1(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 3, angleT, 512, 20, 223, 30);
+        }     
+    }
 
     task accCircle(dist){
-            let angleT = 0;
-            loop(50){
-            let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 3, angleT, -0.05, 1, 2, 0);
-            angleT += 360/50;
+            let angleT = rand_int(0,360);
+            loop(10){
+            let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, -0.05, 1, 2, 0);
+            angleT += 360/10;
         }
     }        
-
 
     task shot1 {
 	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
-	shotangle1 = rand_int(0,180);
-	let obj = CreateShotA2(getX, getY, 3, shotangle1, -0.05, 0, 26, 0);
+      	shotangle1 = rand_int(0,180);
+	let obj = CreateShotA2(getX, getY, rand_int(1, 5), shotangle1, -0.05, 0, 166, 0);
         wait(90);
         explode(obj);
     }
 
     task shot2 {
         if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+	let angleU = 0;
+        loop(100){
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
-	let angleU = 0;
-        loop(10){
-        angleU += rand_int(0, 360);
-        let obj = CreateShotA1(getX, getY, 3, angleU, 26, 0);
-        wait(10);
+        angleU += rand_int(0,360);
+        let obj = CreateShotA1(getX, getY, 3, angleU, 146, 0);
+        wait(1);
         }
+    }
+
+    task shot3 {
+	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+        let getX = ObjMove_GetX(objBoss);
+        let getY = ObjMove_GetY(objBoss);
+	shotangle2 = rand_int(0,360);
+	let obj = CreateShotA1(getX, getY, 5, shotangle2, 145, 0);
+        wait(10);
+        switchDirection(obj);
     }
 
     task explode(obj) {
@@ -99,11 +107,15 @@
     let getY = ObjMove_GetY(obj);
     let angleU = rand_int(0, 360);
     loop(18){
-    CreateShotA1(getX, getY, 3, angleU, 2, 0);
+    CreateShotA1(getX, getY, 1, angleU, 26, 0);
     angleU += 360/18}  
      Obj_Delete(obj);
     }    
 
+    task switchDirection(obj) { 
+        wait(30);
+        ObjMove_SetAngle(obj, GetAngleToPlayer(obj));
+    }
 
     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
