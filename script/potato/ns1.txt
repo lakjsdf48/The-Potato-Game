@@ -3,6 +3,7 @@
     #Title["Potato Nonspell 1"]
     #Text["Potato Nonspell"]
     #include "script/default_system/Default_ShotConst.txt"
+    #include "script/default_system/Default_Effect.txt"
     let objBoss;
     let dic = GetCurrentScriptDirectory;
     let shotangle1;
@@ -41,6 +42,7 @@
            ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 30);
            wait(30);
            shot1;
+           wait(30);
            ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 60);
            wait(60);
            shot2; 
@@ -75,9 +77,11 @@
 
     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
+        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0.1, 0.1);
         Obj_Delete(objBoss);
         DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
         SetAutoDeleteObject(true);
+        wait(30);
         CloseScript(GetOwnScriptID());
         return;
     }

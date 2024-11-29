@@ -3,6 +3,7 @@
     #Title["Potato Spell 1"]
     #Text["Potato Spell"]
     #include "script/default_system/Default_ShotConst.txt"
+    #include "script/default_system/Default_Effect.txt"
     let objBoss;
     let dic = GetCurrentScriptDirectory;
   
@@ -52,7 +53,7 @@
            ObjMove_SetDestAtFrame(objBoss, GetCenterX, GetCenterY, 30);
            wait(60);           
            shot2;
-           wait(30)
+           wait(60)
         }
     }
 
@@ -82,6 +83,7 @@
 
     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
+        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0.1, 0.1);
         Obj_Delete(objBoss);
         DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
         SetAutoDeleteObject(true);
