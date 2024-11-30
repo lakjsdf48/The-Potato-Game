@@ -69,12 +69,17 @@
     Obj_Delete(obj1);
     }    
 
-    task TFinalize {
+     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
-        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0.1, 0.1);
+        let explosion = dic ~ "se/seexplosion.wav";
+        LoadSound(explosion);
+        PlaySE(explosion);
+        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 10, 0.3);
         Obj_Delete(objBoss);
         DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
         SetAutoDeleteObject(true);
+        wait(60);
+        RemoveSound(explosion);
         CloseScript(GetOwnScriptID());
         return;
     }

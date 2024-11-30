@@ -61,6 +61,7 @@
     task accCircle(dist){
             let angleT = rand_int(0,360);
             loop(25){
+            if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
             let obj = CreateShotA2(ObjMove_GetX(objBoss) + dist*cos(angleT), ObjMove_GetY(objBoss) + dist*sin(angleT), 5, angleT, -0.05, 1, 2, 0);
             angleT += 360/25;
             wait(1);
@@ -81,6 +82,7 @@
         if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
 	let angleU = 0;
         loop(100){
+        if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
         angleU += rand_int(0,360);
@@ -104,6 +106,7 @@
     let getY = ObjMove_GetY(obj);
     let angleU = rand_int(0, 360);
     loop(12){
+    if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
     CreateShotA1(getX, getY, 1, angleU, 26, 0);
     angleU += 360/12}  
      Obj_Delete(obj);
@@ -116,10 +119,15 @@
 
     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
-        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0.1, 0.1);
+        let explosion = dic ~ "se/seexplosion.wav";
+        LoadSound(explosion);
+        PlaySE(explosion);
+        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 10, 0.3);
         Obj_Delete(objBoss);
         DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
         SetAutoDeleteObject(true);
+        wait(60);
+        RemoveSound(explosion);
         CloseScript(GetOwnScriptID());
         return;
     }

@@ -42,13 +42,3 @@ task TPlural {
     }
     CloseScript(GetOwnScriptID());
 }
-
-task shotandspell {
-    SetForbidPlayerSpell(false);
-    SetForbidPlayerShot(false);
-}
-
-task noshotandspell {
-    SetForbidPlayerSpell(true);
-    SetForbidPlayerShot(true);
-}

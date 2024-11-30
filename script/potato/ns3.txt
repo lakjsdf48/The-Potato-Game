@@ -8,6 +8,7 @@
     let dic = GetCurrentScriptDirectory;
     let shotangle1;
     let angleT;
+    let explosion = dic ~ "se/seexplosion.wav";
 
     @Event{
         alternative(GetEventType())
@@ -41,14 +42,15 @@
     }
 
     task MainTask {
+        LoadSound(explosion);
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
            wait(15);
+           loop(4){
+           shot2;
            loop(10){
            shot1; 
            }
-           loop(4){
-           shot2;
-           wait(10);
+           wait(30);
            }
            wait(60);
         }
@@ -81,7 +83,9 @@
     let getY = ObjMove_GetY(obj);
     let angleT = rand_int(0, 360);
     loop(12){
-    CreateShotA1(getX, getY, 1, angleT, 2, 0);
+    if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
+    CreateShotA1(getX, getY, 1, angleT, 26, 0);
+    TExplosionA(getX, getY, 10, 0.1);
     angleT += 360/12;}  
      Obj_Delete(obj);
     }    
@@ -91,12 +95,15 @@
         ObjMove_SetAngle(obj, GetAngleToPlayer(obj));
     }
 
-    task TFinalize {
+     task TFinalize {
         while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
-        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0.1, 0.1);
+        PlaySE(explosion);
+        TExplosionA(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 10, 0.3);
         Obj_Delete(objBoss);
         DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
         SetAutoDeleteObject(true);
+        wait(60);
+        RemoveSound(explosion);
         CloseScript(GetOwnScriptID());
         return;
     }
