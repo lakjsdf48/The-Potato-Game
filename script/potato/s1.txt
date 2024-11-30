@@ -6,6 +6,7 @@
     #include "script/default_system/Default_Effect.txt"
     let objBoss;
     let dic = GetCurrentScriptDirectory;
+    let objScene = GetEnemyBossSceneObjectID();
   
     @Event{
         alternative(GetEventType())
@@ -28,6 +29,7 @@
         ObjSprite2D_SetSourceRect(objBoss, 0, 0, 48, 64);
         ObjSprite2D_SetDestCenter(objBoss);
         ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
+        ObjEnemyBossScene_StartSpell(objScene);
         TFinalize;
         MainTask;
     }

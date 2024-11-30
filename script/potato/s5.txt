@@ -32,6 +32,7 @@
         ObjSprite2D_SetSourceRect(objBoss, 0, 0, 48, 64);
         ObjSprite2D_SetDestCenter(objBoss);
         ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 90);
+        ObjEnemyBossScene_StartSpell(currentBossScene);
         TFinalize;
         MainTask;
     }
