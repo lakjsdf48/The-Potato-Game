@@ -24,10 +24,10 @@
     @Initialize{
         objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
         ObjEnemy_Regist(objBoss);
-        let potato = dic ~ "potato.png";
+        let potato = dic ~ "img/potato.png";
         ObjPrim_SetTexture(objBoss, potato);
         ObjRender_SetScaleXYZ(objBoss, 1, 1, 1);
-        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 48, 64);
+        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 100, 100);
         ObjSprite2D_SetDestCenter(objBoss);
         ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
         TFinalize;
@@ -40,14 +40,13 @@
     }
     task MainTask {
         while(ObjEnemy_GetInfo(objBoss,INFO_LIFE) > 0){
-           ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 30);
+           ObjMove_SetDestAtFrame(objBoss, GetCenterX, 60, 30);
            wait(30);
            shot1;
-           wait(30);
+           wait(60);
            ObjMove_SetDestAtFrame(objBoss, rand_int(0, GetStgFrameWidth()), 60, 60);
            wait(60);
            shot2; 
-           shot1;
            wait(30)
         }
     }
@@ -56,11 +55,15 @@
 	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
         let getX = ObjMove_GetX(objBoss);
         let getY = ObjMove_GetY(objBoss);
-	shotangle1 = rand_int(0,360);
+        loop(10){
+        shotangle1 = rand_int(0,360);
 	loop(50){
         if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){return;}
-	CreateShotA1(getX, getY, 2, shotangle1, 146, 5);
+	let obj = CreateShotA2(getX, getY, 3, shotangle1, 0, 5, 145, 5);
+        ObjMove_AddPatternA2(obj, 60, 0.5, NO_CHANGE, 0.1, 0, 3);
 	shotangle1+=360/50;}
+          wait(5);
+        }
     }
 
     task shot2 {
@@ -70,10 +73,7 @@
     let angleT = GetAngleToPlayer(objBoss);
     LoadSound(pew);
     PlaySE(pew); 
-    let angleIncrement = 50;
-    CreateLooseLaserA1(getX, getY, 5, angleT, 1024, 50, 2, 0);
-    CreateLooseLaserA1(getX, getY, 5, angleT + angleIncrement, 1024, 50, 2, 0);
-    CreateLooseLaserA1(getX, getY, 5, angleT - angleIncrement, 1024, 50, 2, 0);
+    let obj = CreateStraightLaserA1(ObjMove_GetX(objBoss), 0, GetAngleToPlayer(objBoss), 512, 200, 60, 153, 120);
 }
 
     task TFinalize {
