@@ -25,10 +25,10 @@
     @Initialize{
         objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
         ObjEnemy_Regist(objBoss);
-        let potato = dic ~ "potato.png";
+        let potato = dic ~ "img/potato.png";
         ObjPrim_SetTexture(objBoss, potato);
         ObjRender_SetScaleXYZ(objBoss, 1, 1, 1);
-        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 48, 64);
+        ObjSprite2D_SetSourceRect(objBoss, 0, 0, 100, 100);
         ObjSprite2D_SetDestCenter(objBoss);
         ObjMove_SetDestAtFrame(objBoss, GetCenterX(), GetCenterY(), 10);
         ObjEnemyBossScene_StartSpell(currentBossScene);
