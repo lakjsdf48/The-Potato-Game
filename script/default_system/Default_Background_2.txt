@@ -1,0 +1,175 @@
+let bSpell = false;
+@Initialize {
+    SetCameraElevationAngle(35);
+    SetCameraAzimuthAngle(-90);
+    TNormalBackground();
+    TSpellBackground();
+}
+@MainLoop {
+    let objScene = GetEnemyBossSceneObjectID();
+    if(objScene != ID_INVALID && ObjEnemyBossScene_GetInfo(objScene, INFO_IS_SPELL)) {
+        bSpell = true;
+    } else {
+        bSpell = false;
+    }
+    
+    yield;
+}
+
+// Backgrounds textures are made by Pixar One Twenty Eight by Pixar Animation Studios. All credits go to them.
+
+
+// Never really use this background, mostly here for experimentation.
+
+task TNormalBackground() {
+        let frameInvisible = 0;
+        let cameracount = 0;
+        let scrollspeed = 8;
+        let walldistance = 256; // Distance from path
+        let path1 = GetCurrentScriptDirectory ~ "/img/Lawn_grass.png";
+        let path2 = GetCurrentScriptDirectory ~ "/img/Fine_gravel.png";
+        let obj1 = ObjPrim_Create(OBJ_SPRITE_3D); // Flooring
+        ObjRender_SetBlendType(obj1, BLEND_ALPHA);
+        Obj_SetRenderPriority(obj1, 0.21);
+        ObjPrim_SetTexture(obj1, path1);
+        ObjSprite3D_SetDestRect(obj1, -1024, -1024 * 4, 1024, 1024 * 4); // Output ratio is 1x4
+        ObjRender_SetAngleX(obj1, 90);
+        let obj2 = ObjPrim_Create(OBJ_SPRITE_3D); // Path
+        ObjRender_SetBlendType(obj2, BLEND_ALPHA);
+        Obj_SetRenderPriority(obj2, 0.21);
+        ObjPrim_SetTexture(obj2, path2);
+        ObjSprite3D_SetDestRect(obj2, -128, -1024 * 4, 128, 1024 * 4); // Output ratio is 1x32
+        ObjRender_SetAngleX(obj2, 90);
+        ascent(i in 0..5) {
+            CreateWall(-walldistance, -75, 2, 512 + i*512);
+            CreateWall(walldistance, 75, 2, 512 + i*512);
+            CreateWall(-walldistance, 75, 2, 256 + i*512);
+            CreateWall(walldistance, -75, 2, 256 + i*512);
+        }
+        loop {
+            if(bSpell) {
+                frameInvisible++;
+                if(frameInvisible >= 60) {
+                    Obj_SetVisible(obj1, false);
+                    Obj_SetVisible(obj2, false);
+                }
+            } else {
+                frameInvisible = 0;
+                Obj_SetVisible(obj1, true);
+                Obj_SetVisible(obj2, true);
+            }
+            if (cameracount % 512 == 0) {
+                CreateWall(-walldistance, -75, 2, 0);
+                CreateWall(walldistance, 75, 2, 0);
+            }
+            if (cameracount % 512 == 256) {
+                CreateWall(-walldistance, 75, 2, 0);
+                CreateWall(walldistance, -75, 2, 0);
+            }
+            SetCameraAzimuthAngle(-90 + 20*sin(cameracount*0.5));
+            // Scroll by setting the source rects
+            ObjSprite3D_SetSourceRect(obj1, 0, 0 + cameracount*scrollspeed, 1024*8, 1024 * 32 + cameracount*scrollspeed);
+            ObjSprite3D_SetSourceRect(obj2, 0, 0 + cameracount*scrollspeed, 1024  , 1024 * 32 + cameracount*scrollspeed);
+            cameracount++;
+            yield;
+        }
+    }
+    task CreateWall(x, angle, movespeed, objcount) {
+        let path3 = GetCurrentScriptDirectory ~ "/img/Red_gravel.png";
+        let totallength = GetTotalWallLength(512, angle);
+        let obj3 = ObjPrim_Create(OBJ_SPRITE_3D); // Wall
+        ObjRender_SetBlendType(obj3, BLEND_ALPHA);
+        Obj_SetRenderPriority(obj3, 0.21);
+        ObjPrim_SetTexture(obj3, path3);
+        ObjSprite3D_SetSourceRect(obj3, 0, 0, 1024*2, 1024);
+        ObjSprite3D_SetDestRect(obj3, -totallength/2, 0, totallength/2, totallength/2);
+        ObjRender_SetX(obj3, x);
+        ObjRender_SetAngleY(obj3, angle);
+        ObjRender_SetZWrite(obj3, true);
+        loop {
+            if(bSpell) {
+                Obj_SetVisible(obj3, false);
+            } else {
+                Obj_SetVisible(obj3, true);
+            }
+            ObjRender_SetZ(obj3, 4096 - objcount*movespeed);
+            if (objcount > 4096) {
+                Obj_Delete(obj3);
+            }
+            objcount += 1;
+            yield;
+        }
+    }
+
+ task TSpellBackground
+{
+	let path1 = GetCurrentScriptDirectory ~ "img/Iridescent_ribbon.png";
+	let obj1 = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjRender_SetBlendType(obj1, BLEND_ALPHA);
+	Obj_SetRenderPriority(obj1, 0.21);
+	ObjPrim_SetTexture(obj1, path1);
+	ObjSprite2D_SetDestRect(obj1, 0, 0, 384, 448);
+    ObjRender_SetColor(obj1, 255, 255, 30);
+    ObjRender_SetColorHSV(obj1, 60, 255, 50);
+
+	let path2 = GetCurrentScriptDirectory ~ "img/Iridescent_ribbon.png";
+	let obj2 = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjRender_SetBlendType(obj2, BLEND_ADD_RGB);
+	Obj_SetRenderPriority(obj2, 0.21);
+	ObjPrim_SetTexture(obj2, path2);
+	ObjSprite2D_SetDestRect(obj2, 0, 0, 384, 448);
+    ObjRender_SetColor(obj2, 255, 150, 30);
+    ObjRender_SetColorHSV(obj2, 30, 255, 50);
+
+	let u1 = 0;
+	let v1 = 0;
+	let u2 = 0;
+	let v2 = 0;
+	let su2 = rand(0.25, 1);
+	let sv2 = rand(0.25, 1);
+	let alpha = 0;
+	let frame = 0;
+	loop
+	{
+		if(bSpell)
+		{
+			alpha += 4;
+		}
+		else
+		{
+			alpha = 0;
+		}
+
+		v1 -= 1;
+		if(v1 < 256){v1+=256;}
+		u2 += su2;
+		if((su2 > 0 && u2 > 256) || (su2 < 0 && u2 < -256))
+		{
+			u2=0;
+			su2 = rand(0.25, 1);
+			if(rand(0, 1) < 0.5){su2 *= -1;}
+		}
+		v2 += sv2;
+		if((sv2 > 0 && v2 > 256) || (sv2 < 0 && v2 < -256))
+		{
+			v2 = 0;
+			sv2 = rand(0.25, 1);
+			if(rand(0, 1) < 0.5){sv2 *= -1;}
+		}
+
+        
+		ObjRender_SetAlpha(obj1, alpha);
+		Obj_SetVisible(obj1, alpha > 0);
+		ObjSprite2D_SetSourceRect(obj1, u1, v1, u1 + 255, v1 + 255);
+
+		Obj_SetVisible(obj2, alpha > 0);
+		ObjSprite2D_SetSourceRect(obj2, u2, v2, u2 + 255, v2 + 255);
+		frame++;
+		yield;
+	}
+
+}
+
+function GetTotalWallLength(seglen, angle) {
+    return seglen/max(absolute(sin(angle)), absolute(cos(angle)));
+}
