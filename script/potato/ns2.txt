@@ -1,0 +1,75 @@
+    #TouhouDanmakufu[Single]
+    #ScriptVersion[3]
+    #Title["Potato Nonspell 2"]
+    #Text["Potato Nonspell"]
+    #include "./../default_system/Default_ShotConst.txt"
+    #include "./../default_system/Default_Effect.txt"
+    #include "./Library.txt"
+    #Background["./../default_system/Default_Background.txt"]
+    #Player["script/player/Reimu/Reimu.txt"]
+    #System["./../default_system/Default_System.txt"]
+    let objBoss;
+
+    @Event{
+        alternative(GetEventType())
+        case(EV_REQUEST_LIFE){
+            SetScriptResult(4000);
+        }
+        case(EV_REQUEST_TIMER){
+            SetScriptResult(30);
+        }
+        case(EV_REQUEST_SPELL_SCORE){
+            SetScriptResult(1000000);
+        }
+    }
+    @Initialize{
+        InitializePotato;
+        ObjMove_SetPosition(objBoss, GetCenterX, GetCenterY);
+        TFinalize;
+        MainTask;
+    }
+    @MainLoop{
+        setHitBox(objBoss);
+        yield;
+    }
+
+    task MainTask {
+        while(!Obj_IsDeleted(objBoss)){
+         ascent(i in 0..10){
+            CreateFamiliar(i, 10, 1, 50, 1.5, 1, 10, 2, 3, 166, 146);
+            CreateFamiliar(i, 10, 1, 50, 1, 1.5, 10, 3, 3, 166, 146);
+         }
+        wait(240);
+        loop(3){
+        ascent(i in 0..4){
+        CreateFamiliar(i, 4, 1, GetStgFrameWidth, 1, 1, 4, 3, 3, 145, 146);
+        wait(10);
+        }
+    }
+        wait(240);
+    }
+}
+
+    task CreateFamiliar(ID, num, dir, rad, width, height, firespeed, bulletspeed, bulletspeed2, graphic1, graphic2) {
+        let objcount = 0;
+        let angleO = ID*360/num; 
+        let obj = CreateShotA1(GetX(objBoss), GetY(objBoss), bulletspeed2, ID*360/num, graphic1, 60); 
+        ObjShot_SetSpellResist(obj, true); 
+        wait(60);
+        while(!Obj_IsDeleted(objBoss) && !Obj_IsDeleted(obj)) { 
+            angleO = ID*360/num + objcount*dir;
+            ObjMove_SetAngle(obj, angleO); 
+            if (objcount % firespeed == 0) {
+                CreateShotA1(GetX(obj), GetY(obj), bulletspeed, angleO + 90, graphic2, 0);
+            }
+            objcount++;
+            yield;
+        }
+        ObjShot_FadeDelete(obj);
+    }
+
+    task TFinalize {
+        while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
+        Finalize(objBoss);
+        return;
+    }

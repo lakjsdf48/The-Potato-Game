@@ -2,6 +2,9 @@
 #ScriptVersion[3]
 #Title["神のジャガイモ ~ The Potato of God"]
 #Text["Potato."]
+#Player["script/player/Reimu/Reimu.txt"]
+#System["./../default_system/Default_System.txt"]
+#Background["./../default_system/Primary_Default_Background.txt"]
 
 let dir = GetCurrentScriptDirectory;
 let obj = ObjEnemyBossScene_Create;
@@ -26,11 +29,55 @@ task mainTask {
 }
 
 task TPlural {
+        BossName("P o t a t o ", GetStgFrameWidth - 384);
+        CreateTrack;
+        Invincibility;
 	ObjEnemyBossScene_Add(obj, 0, dir ~ "ns1.txt");
+        ObjEnemyBossScene_Add(obj, 0, dir ~ "s1.txt");
+        ObjEnemyBossScene_Add(obj, 0, dir ~ "ns2.txt");
         ObjEnemyBossScene_LoadInThread(obj);
         ObjEnemyBossScene_Regist(obj);
 	while(!Obj_IsDeleted(obj)){
         yield;
     }
     CloseScript(GetOwnScriptID());
+}
+
+task Invincibility{
+	AddVirtualKey(VK_USER1,KEY_SPACE,KEY_INVALID);	
+	loop
+	{
+		if(GetVirtualKeyState(VK_USER1)==KEY_HOLD)
+		{
+			SetPlayerInvincibilityFrame(30);
+		}
+		yield;
+	}	
+}
+
+task CreateTrack{
+let obj = ObjSound_Create();
+ObjSound_Load(obj, dir ~ "/bgm/theme_boss.mp3");
+ObjSound_SetSoundDivision(obj, SOUND_BGM);
+ObjSound_SetLoopEnable(obj, true);
+ObjSound_SetLoopTime(obj, 0, 999);
+ObjSound_SetVolumeRate(obj, 100);
+ObjSound_Play(obj);
+}
+
+task BossName(name,posx){
+let objname = ObjText_Create();
+ObjText_SetText(objname,name);
+ObjText_SetFontType(objname,"RussellSquare");
+ObjText_SetFontSize(objname,14);
+ObjText_SetFontColorTop(objname,255,30,30);
+ObjText_SetFontColorBottom(objname,150,150,30);
+ObjText_SetFontBorderType(objname,BORDER_SHADOW);
+ObjText_SetFontBorderColor(objname,255,32,32);
+ObjText_SetFontBorderWidth(objname,1);
+ObjText_SetHorizontalAlignment(objname, ALIGNMENT_RIGHT);
+ObjText_SetMaxWidth(objname,GetStgFrameWidth);
+Obj_SetRenderPriority(objname,0.8);
+ObjRender_SetPosition(objname,posx, 16, 0);
+ObjRender_SetAlpha(objname, 255);
 }

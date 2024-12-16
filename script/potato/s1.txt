@@ -1,0 +1,78 @@
+    #TouhouDanmakufu[Single]
+    #ScriptVersion[3]
+    #Title["Potato Spell 1"]
+    #Text["Potato Spell"]
+    #include "./../default_system/Default_ShotConst.txt"
+    #include "./../default_system/Default_Effect.txt"
+    #include "./Library.txt"
+    #Background["./../default_system/Default_Background.txt"]
+    #Player["script/player/Reimu/Reimu.txt"]
+    #System["./../default_system/Default_System.txt"]
+    let objBoss;
+
+    @Event{
+        alternative(GetEventType())
+        case(EV_REQUEST_LIFE){
+            SetScriptResult(4000);
+        }
+        case(EV_REQUEST_TIMER){
+            SetScriptResult(30);
+        }
+        case(EV_REQUEST_SPELL_SCORE){
+            SetScriptResult(1000000);
+        }
+    }
+    @Initialize{
+        InitializePotato;
+        Invincibility;
+        ObjEnemyBossScene_StartSpell(objScene);
+        BossName("Secret Art ~ Storm of Slashes", -150, 255, 50, 30, 255, 100, 30);
+        ObjMove_SetPosition(objBoss, GetCenterX, GetCenterY);
+        potatoShot;
+        TFinalize;
+        MainTask;
+    }
+    @MainLoop{
+        setHitBox(objBoss);
+        yield;
+    }
+    task MainTask {
+        wait(60);
+         ascent(i in 0..12){
+	        TShake(5, 60, 1);
+            CreateFamiliar(i, 12, 1, 15, 2, 1, 166, 146);
+            CreateFamiliar(i, 12, -1, 15, 2, 1, 166, 146);
+         }
+    }
+
+    task CreateFamiliar(ID, num, dir, firespeed, bulletspeed, graphicspeed, graphic1, graphic2) {
+        let objcount = 0;
+        let angleO = ID*360/num; 
+        let obj = CreateShotA1(GetX(objBoss), GetY(objBoss), graphicspeed, ID*360/num, graphic1, 0); 
+        ObjShot_SetSpellResist(obj, true); 
+        while(!Obj_IsDeleted(objBoss)) { 
+            angleO = ID*360/num + objcount*dir;
+            ObjMove_SetAngle(obj, angleO); 
+            if (objcount % firespeed == 0 && !Obj_IsDeleted(obj)) {
+                CreateShotA1(GetX(obj), GetY(obj), bulletspeed, angleO, graphic2, 0);
+                }
+            objcount++;
+            yield;
+        }
+    }
+
+    task potatoShot{
+        wait(60);
+        while(!Obj_IsDeleted(objBoss)){
+        shotangle1 = rand_int(0,360);
+        Astroid(objBoss, GetX(objBoss), GetY(objBoss), 50, 3, 0, shotangle1, 0, 0.01, 1, 146, 0, 10);
+        wait(360);
+        yield;
+        }
+    }
+
+    task TFinalize {
+        while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0){yield;}
+        Finalize(objBoss);
+        return;
+    }

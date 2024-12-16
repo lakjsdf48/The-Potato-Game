@@ -97,10 +97,12 @@ ObjRender_SetAlpha(objname, 255);
 }
 
 task Finalize(obj){   
-     TExplosionA(ObjMove_GetX(obj), ObjMove_GetY(obj), 1, 0.1);
-     DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
+     TExplosionA(GetX(obj), GetY(obj), 1, 0.1);
+	 TShake(5, 60, 1);
+     DeleteShotAll(TYPE_ALL, TYPE_ITEM);
      SetAutoDeleteObject(true);
      Obj_Delete(obj);
+	 wait(30);
      CloseScript(GetOwnScriptID());
 }
 
@@ -140,22 +142,14 @@ task Astroid(obj, x, y, num, num_times, size, angle, speed, acc, maxacc, graphic
 }
 
 function InitializePotato{
-	    objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
-	    ObjEnemy_Regist(objBoss);
+	objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
+        ObjEnemy_Regist(objBoss);
         let potato = dic ~ "img/potato.png";
         ObjPrim_SetTexture(objBoss, potato);
         ObjRender_SetScaleXYZ(objBoss, 0.5, 0.5, 0.5);
         ObjSprite2D_SetSourceRect(objBoss, 0, 0, 100, 100);
         ObjSprite2D_SetDestCenter(objBoss);
 		return objBoss
-}
-
-task BulletWall(obj, x, y, num, increment, angle, speed, acc, maxacc, graphic, bulletdelay){
-     loop(num){
-     if(Obj_IsDeleted(obj)){return;}
-     let objShot = CreateShotA2(x, y, speed, angle, acc, maxacc, graphic, bulletdelay);
-     angle += increment;
-     }     
 }
 
 function GetCenterX(){
